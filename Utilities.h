@@ -6,6 +6,8 @@
 #include <iostream>
 #include "GLUT.H" 
 
+#define PI  3.1415
+
 // Main variables and functions.
 namespace Main {
     // Title
@@ -13,7 +15,7 @@ namespace Main {
 
     // Greeting message.
     static std::string GREETING_MESSAGE = "\
-Here will be key bindings.\n";
+ >> Use 'w', 's', 'a', 'd' to move camera around.\n";
 
 
     // Prints formatted greeting message.
@@ -42,24 +44,36 @@ namespace Window {
     };
 
     // Window title.
-    #define TITLE "Butterfly"
+#define TITLE "Butterfly"
 
-    // Display mode.
-    #define MODE (GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA)
+// Display mode.
+#define MODE (GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA)
+
 }
 
 // Camera position and movement parameters.
 namespace Camera {
     /// Position.     
 
-    static float POSITION_X = 3.f;      // Camera x position.
-    static float POSITION_Y = 10.f;     // Camera y position.
-    static float POSITION_Z = 3.0;      // Camera z position.
+    static float POSITION_X = 8.0f;      // Camera x position.
+    static float POSITION_Y = 3.0f;     // Camera y position.
+    static float POSITION_Z = 12.0f;      // Camera z position.
+    static float DELTA_X = 0.0f;
+    static float DELTA_Y = 0.0f;
+    static float SPEED = 0.3f;
 
     /// Direction.
 
-    static float lx = 0.0f;
-    static float ly = 0.0f;
-    static float lz = -1.0f;
+    static float DIR_X = 0.0f;      // Camera x direction.
+    static float DIR_Y = 0.0f;      // Camera y direction.
+    static float DIR_Z = -1.0f;     // Camera z direction.
+
+    /// Rotation
+
+    static float ANGLE_X = 0.0f;    // Camera x rotation angle.
+    static float ANGLE_Y = 0.0f;    // Camera y rotation angle.
+    static float DELTA_ANGLE_X = 0.0f;      // Camera delta x rotation.
+    static float DELTA_ANGLE_Y = 0.0f;      // Camera delta y rotation.
+    static float ROTATION_MODIFIER = 0.5f;  // Camera rotation speed modifier.
 }
 #endif
