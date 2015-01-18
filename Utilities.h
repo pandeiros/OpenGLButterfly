@@ -15,14 +15,15 @@ namespace Main {
 
     // Greeting message.
     static std::string GREETING_MESSAGE = "\
- >> Use 'w', 's', 'a', 'd' to move camera around.\n";
+ >> Use 'w', 's', 'a', 'd' to zoom and move camera horizontally.\n\
+ >> Use up and down arrows to move camera verticaly\n";
 
 
     // Prints formatted greeting message.
     static void printHeader () {
-        unsigned int lineSize = 45;
+        unsigned int lineSize = 70;
         std::cout << std::setw (lineSize) << std::setfill ('=') << "\n";
-        std::cout << "      " << TITLE << "\n";
+        std::cout << "               " << TITLE << "\n";
         std::cout << std::setw (lineSize) << std::setfill ('-') << "\n";
         std::cout << GREETING_MESSAGE;
         std::cout << std::setw (lineSize) << std::setfill ('=') << "\n";

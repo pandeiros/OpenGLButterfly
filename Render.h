@@ -64,7 +64,7 @@ namespace Render {
         // Position was changed.
         if (Camera::DELTA_X || Camera::DELTA_Z || Camera::DELTA_Y) {
             Camera::POSITION_X += (Camera::DELTA_X * Camera::DIR_X - Camera::DELTA_Z * Camera::DIR_Z) * 0.1f;
-            Camera::POSITION_Y += (Camera::DELTA_X * Camera::DIR_Y + Camera::DELTA_Y * Camera::DIR_Y) * 0.1f;
+            Camera::POSITION_Y += (Camera::DELTA_X * Camera::DIR_Y + Camera::DELTA_Y) * 0.1f;
             Camera::POSITION_Z += (Camera::DELTA_X * Camera::DIR_Z + Camera::DELTA_Z * Camera::DIR_X) * 0.1f;
         }
     }
@@ -89,12 +89,6 @@ namespace Render {
                    Camera::POSITION_X + Camera::DIR_X, Camera::POSITION_Y + Camera::DIR_Y, Camera::POSITION_Z + Camera::DIR_Z,
                    0.0f, 1.0f, 0.0f);
         updateLight ();
-
-
-        //glPushMatrix ();
-        //glTranslatef (Light::POS_X, 5.0, Light::POS_Z);
-        ////glutSolidSphere (0.3, 30, 30);
-        //glPopMatrix ();
 
         // Create floor.
         glPushMatrix ();
