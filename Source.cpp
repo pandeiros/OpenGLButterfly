@@ -35,8 +35,8 @@ int main (int argc, char **argv)
     // Keyboard callbacks.
     glutKeyboardFunc (Keyboard::handlePressedKey);	    // Pressed key handler.
     glutKeyboardUpFunc (Keyboard::handleReleasedKey);   // Released key handler.
-    //glutSpecialFunc (pressSpecialKey);		// Pressed special key handler.
-    //glutSpecialUpFunc (releaseSpecialKey);	// Released special key handler.
+    glutSpecialFunc (Keyboard::pressedKeySpecial);		// Pressed special key handler.
+    glutSpecialUpFunc (Keyboard::releasedKeySpecial);	// Released special key handler.
 
     // Mouse callbacks.
     glutMouseFunc (Mouse::mouseButton);		// Press/release button mouse handler.
@@ -51,6 +51,7 @@ int main (int argc, char **argv)
     glutIgnoreKeyRepeat (GLUT_DEVICE_IGNORE_KEY_REPEAT);					
     
     // And we begin...
+    Render::init ();
     glutMainLoop ();							
 
     return 0;

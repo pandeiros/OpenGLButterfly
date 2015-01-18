@@ -60,6 +60,7 @@ namespace Camera {
     static float POSITION_Z = 12.0f;      // Camera z position.
     static float DELTA_X = 0.0f;
     static float DELTA_Y = 0.0f;
+    static float DELTA_Z = 0.0f;
     static float SPEED = 0.3f;
 
     /// Direction.
@@ -76,4 +77,5 @@ namespace Camera {
     static float DELTA_ANGLE_Y = 0.0f;      // Camera delta y rotation.
     static float ROTATION_MODIFIER = 0.5f;  // Camera rotation speed modifier.
 }
+
 #endif
