@@ -2,41 +2,51 @@
 #define _RENDER_
 
 #include "GLUT.H"
+#include "Utilities.h"
 
 namespace Render {
 
     // Perspective field of view angle.
     static float FOV_ANGLE = 60.0f;
 
-    // Light position and spot parameters.
-    namespace Light {
-
-        // Light source coordinates
-        static float POS_X = 0.0f;
-        static float POS_Y = 5.0f;
-        static float POS_Z = 1.0f;
-
-        // Spot direction
-        static float SPOT_X = 0.0f;
-        static float SPOT_Y = -1.0f;
-        static float SPOT_Z = 0.0f;
-    }
-
     void init () {
-        GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
-        GLfloat mat_shininess[] = {50.0};
+        // Light parameters and positions.
+        GLfloat grayAmbientLight[] = {0.1, 0.1, 0.1, 1.0};
+        GLfloat whiteSpecularLight[] = {1.0, 1.0, 1.0, 1.0};
+        GLfloat whiteDiffuseLight[] = {1.0, 1.0, 1.0, 1.0};
+        GLfloat lightPosition[] = {Light::POS_X, Light::POS_Y, Light::POS_Z, 0.0};
+        GLfloat sportDirection[] = {Light::SPOT_X, Light::SPOT_Y, Light::SPOT_Z};
+
         glShadeModel (GL_SMOOTH);
+        glEnable (GL_COLOR_MATERIAL);
+        glEnable (GL_DEPTH_TEST);
+        glEnable (GL_LIGHTING);
+        glEnable (GL_LIGHT0);
+
+        glLightfv (GL_LIGHT0, GL_AMBIENT, grayAmbientLight);
+        glLightfv (GL_LIGHT0, GL_SPECULAR, whiteSpecularLight);
+        glLightfv (GL_LIGHT0, GL_DIFFUSE, whiteDiffuseLight);
+        glLightfv (GL_LIGHT0, GL_POSITION, lightPosition);
+        glLightf (GL_LIGHT0, GL_LINEAR_ATTENUATION, Light::LINEAR_ATT);
+        glLightf (GL_LIGHT0, GL_SPOT_CUTOFF, 90.0f);
+        glLightf (GL_LIGHT0, GL_SPOT_EXPONENT, 2.f);
+        glLightfv (GL_LIGHT0, GL_SPOT_DIRECTION, sportDirection);
+
+        Camera::DIR_X = sin ((Camera::ANGLE_X + Camera::DELTA_ANGLE_X) / 180 * PI);
+        Camera::DIR_Y = -sin ((Camera::ANGLE_Y + Camera::DELTA_ANGLE_Y) / 180 * PI);
+        Camera::DIR_Z = -cos ((Camera::ANGLE_X + Camera::DELTA_ANGLE_X) / 180 * PI);
+
+        /*GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+        GLfloat mat_shininess[] = {50.0};
+
         glLightfv (GL_LIGHT0, GL_SPECULAR, mat_specular);
         glMaterialfv (GL_FRONT, GL_SPECULAR, mat_specular);
         glMaterialfv (GL_FRONT, GL_SHININESS, mat_shininess);
         glLightf (GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.1f);
         glLightf (GL_LIGHT0, GL_SPOT_CUTOFF, 120.0);
         glLightf (GL_LIGHT0, GL_SPOT_EXPONENT, 20.0);
-        glEnable (GL_COLOR_MATERIAL);
-        glEnable (GL_DEPTH_TEST);
-        glEnable (GL_LIGHTING);
-        glEnable (GL_LIGHT0);
-        glColorMaterial (GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+
+        glColorMaterial (GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);*/
     }
 
     // Reshape function.
@@ -51,7 +61,7 @@ namespace Render {
         // Enter projection mode, transform and go back to model view mode.
         glMatrixMode (GL_PROJECTION);
         glLoadIdentity ();
-        gluPerspective (FOV_ANGLE, ratio, 0.1, 100.0);
+        gluPerspective (FOV_ANGLE, ratio, 0.1, 300.0);
         glMatrixMode (GL_MODELVIEW);
 
         // Set viewport to cover entire window.
@@ -71,10 +81,11 @@ namespace Render {
 
     // Update light parameters.
     void updateLight () {
-        GLfloat light_position[] = {Light::POS_X, Light::POS_Y, Light::POS_Z, 1.0};
+        GLfloat lightPosition[] = {Light::POS_X, Light::POS_Y, Light::POS_Z, 1.0};
         GLfloat spotDir[] = {Light::SPOT_X, Light::SPOT_Y, Light::SPOT_Z};
-        glLightfv (GL_LIGHT0, GL_POSITION, light_position);
+        glLightfv (GL_LIGHT0, GL_POSITION, lightPosition);
         glLightfv (GL_LIGHT0, GL_SPOT_DIRECTION, spotDir);
+        glLightf (GL_LIGHT0, GL_LINEAR_ATTENUATION, Light::LINEAR_ATT);
     }
 
     // Main render function.
@@ -90,6 +101,8 @@ namespace Render {
                    0.0f, 1.0f, 0.0f);
         updateLight ();
 
+
+
         // Create floor.
         glPushMatrix ();
         {
@@ -101,7 +114,7 @@ namespace Render {
             for (int i = -FLOOR_SIZE; i < FLOOR_SIZE; ++i) {
 
                 glBegin (GL_TRIANGLE_STRIP);
-                for ( int j = -FLOOR_SIZE; j < FLOOR_SIZE; ++j) {
+                for (int j = -FLOOR_SIZE; j < FLOOR_SIZE; ++j) {
                     glVertex3f (i, 0.0f, j);
                     glVertex3f (i + 1, 0.0f, j);
                 }
@@ -111,16 +124,10 @@ namespace Render {
         glPopMatrix ();
         // End creating floor
 
-        
+
         // Render butterfly.
-        glPushMatrix ();
-        {
-            glTranslatef (0.0, 0.0, 0.0);
-            glColor3f (1.0f, 0.0f, 0.0f);
-            Butterfly::renderButterfly ();
-        }
-        glPopMatrix ();
-        // End redering butterfly.
+        Butterfly::renderButterfly ();
+
 
         // Make it visible.
         glutSwapBuffers ();

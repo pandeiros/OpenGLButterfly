@@ -18,14 +18,14 @@ namespace Mouse {
         // If mouse button is down (DRAG_X and DRAG_Y  != -1).
         if (DRAG_X >= 0 && DRAG_Y >= 0)
         {
-            // Change rotation.
-            Camera::DELTA_ANGLE_X = (x - DRAG_X) / 180.f * PI * Camera::ROTATION_MODIFIER;
-            Camera::DELTA_ANGLE_Y = (y - DRAG_Y) / 180.f * PI * Camera::ROTATION_MODIFIER;
+            // Obtain rotation delta.
+            Camera::DELTA_ANGLE_X = (x - DRAG_X) * Camera::ROTATION_MODIFIER;
+            Camera::DELTA_ANGLE_Y = (y - DRAG_Y) * Camera::ROTATION_MODIFIER;
 
-            // Change direction.
-            Camera::DIR_X = sin (Camera::ANGLE_X + Camera::DELTA_ANGLE_X);
-            Camera::DIR_Y = sin (Camera::ANGLE_Y - Camera::DELTA_ANGLE_Y);
-            Camera::DIR_Z = -cos (Camera::ANGLE_X + Camera::DELTA_ANGLE_X);
+            // Change roatation.
+            Camera::DIR_X = sin ((Camera::ANGLE_X + Camera::DELTA_ANGLE_X) / 180 * PI);
+            Camera::DIR_Y = -sin ((Camera::ANGLE_Y + Camera::DELTA_ANGLE_Y) / 180 * PI);
+            Camera::DIR_Z = -cos ((Camera::ANGLE_X + Camera::DELTA_ANGLE_X) / 180 * PI);
         }
     }
 
@@ -45,7 +45,7 @@ namespace Mouse {
             else    // state == GLUT_UP		    			
             {
                 Camera::ANGLE_X += Camera::DELTA_ANGLE_X;
-                Camera::ANGLE_Y -= Camera::DELTA_ANGLE_Y;
+                Camera::ANGLE_Y += Camera::DELTA_ANGLE_Y;
                 DRAG_X = -1;
                 DRAG_Y = -1;
             }

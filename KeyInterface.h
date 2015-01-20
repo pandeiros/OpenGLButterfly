@@ -10,6 +10,10 @@
 #define KEY_MOVE_LEFT 'a'
 #define KEY_MOVE_FORWARD 'w'
 #define KEY_MOVE_BACKWARD 's'
+#define KEY_MOVE_UP GLUT_KEY_UP
+#define KEY_MOVE_DOWN GLUT_KEY_DOWN
+#define KEY_LIGHT_DOWN GLUT_KEY_F4
+#define KEY_LIGHT_UP GLUT_KEY_F5
 // --------------------------------------------
 
 namespace Keyboard {
@@ -66,11 +70,17 @@ namespace Keyboard {
 
         // Y-axis camera movement.
         switch (key) {
-            case GLUT_KEY_UP:
+            case KEY_MOVE_UP:
                 Camera::DELTA_Y = Camera::SPEED;
                 break;
-            case GLUT_KEY_DOWN:
+            case KEY_MOVE_DOWN:
                 Camera::DELTA_Y = -Camera::SPEED;
+                break;
+            case KEY_LIGHT_UP:
+                Light::LINEAR_ATT = MAX (MIN_LINEAR_ATT, Light::LINEAR_ATT - 0.01f);
+                break;
+            case KEY_LIGHT_DOWN:
+                Light::LINEAR_ATT = MIN (MAX_LINEAR_ATT, Light::LINEAR_ATT + 0.01f);
                 break;
          
             default:
@@ -83,8 +93,8 @@ namespace Keyboard {
 
         // Stop moving camera in Y-axis
         switch (key) {
-            case GLUT_KEY_UP:
-            case GLUT_KEY_DOWN:
+            case KEY_MOVE_UP:
+            case KEY_MOVE_DOWN:
                 Camera::DELTA_Y = 0.0f;
                 break;
 
