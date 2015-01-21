@@ -87,7 +87,7 @@ namespace Light {
 // Border values for linear attenuation.
 
 #define MAX_LINEAR_ATT 0.1f
-#define MIN_LINEAR_ATT 0.006f
+#define MIN_LINEAR_ATT 0.01f
 
     /// Light source coordinates.
 

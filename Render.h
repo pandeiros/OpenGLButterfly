@@ -17,12 +17,14 @@ namespace Render {
         GLfloat lightPosition[] = {Light::POS_X, Light::POS_Y, Light::POS_Z, 0.0};
         GLfloat sportDirection[] = {Light::SPOT_X, Light::SPOT_Y, Light::SPOT_Z};
 
+        // Enable some magic stuff.
         glShadeModel (GL_SMOOTH);
         glEnable (GL_COLOR_MATERIAL);
         glEnable (GL_DEPTH_TEST);
         glEnable (GL_LIGHTING);
         glEnable (GL_LIGHT0);
 
+        // Set up lightning.
         glLightfv (GL_LIGHT0, GL_AMBIENT, grayAmbientLight);
         glLightfv (GL_LIGHT0, GL_SPECULAR, whiteSpecularLight);
         glLightfv (GL_LIGHT0, GL_DIFFUSE, whiteDiffuseLight);
@@ -32,21 +34,17 @@ namespace Render {
         glLightf (GL_LIGHT0, GL_SPOT_EXPONENT, 2.f);
         glLightfv (GL_LIGHT0, GL_SPOT_DIRECTION, sportDirection);
 
+        // Set up materials.
+        GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+        GLfloat mat_shininess[] = {5.0};
+        glMaterialfv (GL_FRONT, GL_SPECULAR, mat_specular);
+        glMaterialfv (GL_FRONT, GL_SHININESS, mat_shininess);
+        glColorMaterial (GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+
+        // Set initial camera position based on axis rotation.
         Camera::DIR_X = sin ((Camera::ANGLE_X + Camera::DELTA_ANGLE_X) / 180 * PI);
         Camera::DIR_Y = -sin ((Camera::ANGLE_Y + Camera::DELTA_ANGLE_Y) / 180 * PI);
         Camera::DIR_Z = -cos ((Camera::ANGLE_X + Camera::DELTA_ANGLE_X) / 180 * PI);
-
-        /*GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
-        GLfloat mat_shininess[] = {50.0};
-
-        glLightfv (GL_LIGHT0, GL_SPECULAR, mat_specular);
-        glMaterialfv (GL_FRONT, GL_SPECULAR, mat_specular);
-        glMaterialfv (GL_FRONT, GL_SHININESS, mat_shininess);
-        glLightf (GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.1f);
-        glLightf (GL_LIGHT0, GL_SPOT_CUTOFF, 120.0);
-        glLightf (GL_LIGHT0, GL_SPOT_EXPONENT, 20.0);
-
-        glColorMaterial (GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);*/
     }
 
     // Reshape function.
