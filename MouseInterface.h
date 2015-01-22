@@ -24,7 +24,7 @@ namespace Mouse {
 
             // Change roatation.
             Camera::DIR_X = sin ((Camera::ANGLE_X + Camera::DELTA_ANGLE_X) / 180 * PI);
-            Camera::DIR_Y = -sin ((Camera::ANGLE_Y + Camera::DELTA_ANGLE_Y) / 180 * PI);
+            Camera::DIR_Y = -sin ((Camera::ANGLE_Y + Camera::DELTA_ANGLE_Y) / 540 * PI) * 3;
             Camera::DIR_Z = -cos ((Camera::ANGLE_X + Camera::DELTA_ANGLE_X) / 180 * PI);
         }
     }

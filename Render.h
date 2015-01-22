@@ -35,10 +35,11 @@ namespace Render {
         glLightfv (GL_LIGHT0, GL_SPOT_DIRECTION, sportDirection);
 
         // Set up materials.
-        GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
-        GLfloat mat_shininess[] = {5.0};
-        glMaterialfv (GL_FRONT, GL_SPECULAR, mat_specular);
-        glMaterialfv (GL_FRONT, GL_SHININESS, mat_shininess);
+        GLfloat matSpecular[] = {1.0, 1.0, 1.0, 1.0};
+        GLfloat matShininess[] = {5.0};
+        glMaterialfv (GL_FRONT, GL_SPECULAR, matSpecular);
+        glMaterialfv (GL_FRONT, GL_SHININESS, matShininess);
+
         glColorMaterial (GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
         // Set initial camera position based on axis rotation.
@@ -75,6 +76,10 @@ namespace Render {
             Camera::POSITION_Y += (Camera::DELTA_X * Camera::DIR_Y + Camera::DELTA_Y) * 0.1f;
             Camera::POSITION_Z += (Camera::DELTA_X * Camera::DIR_Z + Camera::DELTA_Z * Camera::DIR_X) * 0.1f;
         }
+
+        Camera::DISTANCE = std::sqrt (
+            std::sqrt (Camera::POSITION_X * Camera::POSITION_X + Camera::POSITION_Y * Camera::POSITION_Y) +
+            Camera::POSITION_Z * Camera::POSITION_Z);
     }
 
     // Update light parameters.
@@ -121,6 +126,24 @@ namespace Render {
         }
         glPopMatrix ();
         // End creating floor
+
+        //Render a cone to indicate light position and direction.
+        glPushMatrix ();
+        {
+            GLfloat matEmmision[] = {0.9, 0.9, 0.9, 0.9};
+            glMaterialfv (GL_FRONT, GL_EMISSION, matEmmision);
+
+            GLUquadricObj *base = gluNewQuadric ();
+            glColor3ub (200, 200, 200);
+            glTranslatef (Light::POS_X, Light::POS_Y, Light::POS_Z);
+            glRotatef (45, 1.0, 0.0, 0.0);
+            glRotatef (180, 0.0, 1.0, 0.0);
+            glutSolidCone (0.5, 1.5, 30, 30);
+
+            GLfloat zeroEmmision[] = {0.0, 0.0, 0.0, 1.0};
+            glMaterialfv (GL_FRONT, GL_EMISSION, zeroEmmision);
+        }
+        glPopMatrix ();
 
 
         // Render butterfly.

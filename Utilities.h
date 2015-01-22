@@ -17,9 +17,8 @@ namespace Main {
 
     // Greeting message.
     static std::string GREETING_MESSAGE = "\
-                                                                                                                                                                                                                   >> Use 'w', 's', 'a', 'd' to zoom and move camera horizontally.\n\
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            >> Use up and down arrows to move camera verticaly\n";
-
+>> Use 'w', 's', 'a', 'd' to zoom and move camera horizontally.\n\
+>> Use up and down arrows to move camera verticaly\n";
 
     // Prints formatted greeting message.
     static void printHeader () {
@@ -58,9 +57,9 @@ namespace Window {
 namespace Camera {
     /// Position.     
 
-    static float POSITION_X = 7.0f;      // Camera x position.
-    static float POSITION_Y = 10.0f;     // Camera y position.
-    static float POSITION_Z = -15.0f;      // Camera z position.
+    static float POSITION_X = 15.0f;      // Camera x position.
+    static float POSITION_Y = 15.0f;     // Camera y position.
+    static float POSITION_Z = -25.0f;      // Camera z position.
     static float DELTA_X = 0.0f;
     static float DELTA_Y = 0.0f;
     static float DELTA_Z = 0.0f;
@@ -75,10 +74,13 @@ namespace Camera {
     /// Rotation
 
     static float ANGLE_X = -140.0f;    // Camera x rotation angle.
-    static float ANGLE_Y = 30.f;    // Camera y rotation angle.
+    static float ANGLE_Y = 40.f;    // Camera y rotation angle.
     static float DELTA_ANGLE_X = 0.0f;      // Camera delta x rotation.
     static float DELTA_ANGLE_Y = 0.0f;      // Camera delta y rotation.
     static float ROTATION_MODIFIER = 0.2f;  // Camera rotation speed modifier.
+
+    // Distance to point (0, 0 ,0)
+    static float DISTANCE = 0.0f;
 }
 
 // Light position, spot and intensity parameters.
@@ -131,27 +133,45 @@ namespace Bezier {
         {0.f, 0.f, -12.f}
     };
 
+    // Control points for right antenna of the butterfly.
+    static float antennaCtrlPoints[CTRL_POINTS][3] = {
+        {0.3f, 0.f, -3.f},
+        {0.5f, 2.f, -4.f},
+        {0.3f, 2.f, -2.f},
+        {0.0, 0.0, 0.0}
+    };
+
+    // Factorial function,
     int factorial (int n) {
         return (n == 1 || n == 0) ? 1 : factorial (n - 1) * n;
     }
 
+    // Bernstein base polynomial function.
     float fBernstein (unsigned int i, float t) {
-        return (factorial (CTRL_POINTS-1) * std::pow (t, i) * std::pow (1 - t, CTRL_POINTS-1 - i) / factorial (i) / factorial (CTRL_POINTS-1 - i));
+        return (factorial (CTRL_POINTS - 1) * std::pow (t, i) * std::pow (1 - t, CTRL_POINTS - 1 - i) / factorial (i) / factorial (CTRL_POINTS - 1 - i));
     }
 
     // Calculates points for a curve.
-    float getBezierPoint (bool lower, bool left, float t, unsigned int coord) {
+    float getBezierPoint (bool isWing, bool lower, bool right, float t, unsigned int coord) {
         float point = 0.f;
 
-        for (unsigned int i = 0; i < CTRL_POINTS-1; ++i) {
-            if (lower && left)
-                point += lowerCtrlPoints[i][coord] * fBernstein (i, t);
-            else if (!lower && left)
-                point += upperCtrlPoints[i][coord] * fBernstein (i, t);
-            else if (lower && !left)
-                point += lowerCtrlPoints[i][coord] * (coord == 0 ? -1 : 1) * fBernstein (i, t);
-            else
-                point += upperCtrlPoints[i][coord] * (coord == 0 ? -1 : 1) * fBernstein (i, t);
+        for (unsigned int i = 0; i < CTRL_POINTS - 1; ++i) {
+            if (isWing) {
+                if (lower && right)
+                    point += lowerCtrlPoints[i][coord] * fBernstein (i, t);
+                else if (!lower && right)
+                    point += upperCtrlPoints[i][coord] * fBernstein (i, t);
+                else if (lower && !right)
+                    point += lowerCtrlPoints[i][coord] * (coord == 0 ? -1 : 1) * fBernstein (i, t);
+                else
+                    point += upperCtrlPoints[i][coord] * (coord == 0 ? -1 : 1) * fBernstein (i, t);
+            }
+            else {
+                if (right)
+                    point += antennaCtrlPoints[i][coord] * fBernstein (i, t);
+                else
+                    point += antennaCtrlPoints[i][coord] * (coord == 0 ? -1 : 1) * fBernstein (i, t);
+            }
         }
 
         return point;
