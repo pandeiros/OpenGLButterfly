@@ -66,9 +66,9 @@ namespace Window {
 namespace Camera {
     /// Position.     
 
-    static float POSITION_X = 15.0f;      // Camera x position.
-    static float POSITION_Y = 15.0f;     // Camera y position.
-    static float POSITION_Z = -25.0f;      // Camera z position.
+    static float POSITION_X = 13.0f;      // Camera x position.
+    static float POSITION_Y = 30.0f;     // Camera y position.
+    static float POSITION_Z = -35.0f;      // Camera z position.
     static float DELTA_X = 0.0f;
     static float DELTA_Y = 0.0f;
     static float DELTA_Z = 0.0f;
@@ -82,7 +82,7 @@ namespace Camera {
 
     /// Rotation
 
-    static float ANGLE_X = -140.0f;    // Camera x rotation angle.
+    static float ANGLE_X = -150.0f;    // Camera x rotation angle.
     static float ANGLE_Y = 40.f;    // Camera y rotation angle.
     static float DELTA_ANGLE_X = 0.0f;      // Camera delta x rotation.
     static float DELTA_ANGLE_Y = 0.0f;      // Camera delta y rotation.
@@ -124,7 +124,7 @@ namespace Bezier {
 #define MAX_BEZIER_PREC 50
 
     // How many vertexes in a curve.
-    static unsigned int BEZIER_PRECISION = 10;
+    static int BEZIER_PRECISION = 10;
 
     // Control points for lower right wing (left is symmetrical).
     static float lowerCtrlPoints[CTRL_POINTS][3] = {
