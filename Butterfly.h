@@ -9,6 +9,7 @@
 
 namespace Butterfly {
 
+    // Colors.
 #define HEAD_COLOR glColor3ub(45, 45, 45)
 #define BODY_COLOR glColor3ub(30, 30, 30)
 #define WING_BORDER_COLOR glColor3ub(240, 240, 240)
@@ -16,11 +17,16 @@ namespace Butterfly {
 #define WING_FILL_COLOR_BLUE glColor3ub(85, 134, 210)
 #define WING_FILL_COLOR_RED glColor3ub(240, 50, 5)
 #define WING_FILL_COLOR_GREEN glColor3ub(160, 220, 60)
+
+    // Line sizes.
 #define WING_BORDER_SIZE 5.f
 #define ANTENNA_SIZE 5.f
 
-    // TEMP
-    static int b = 2;
+    // Extrusion contour
+    static gleDouble contour[MAX_BEZIER_PREC + 2][2];
+
+    // Up vector.
+    static gleDouble up[3] = {0.0, 1.0, 0.0};
 
     // Body draw function.
     // Contains of one dark sphere, expanded in one axis.
@@ -126,26 +132,35 @@ namespace Butterfly {
     // Wings draw function.
     // Four wings
     void drawWings () {
-        float sizeModifier = MAX (10.f, Camera::DISTANCE) / 10.f;
-        gleDouble contour[MAX_BEZIER_PREC + 2][2];
-        gleDouble up[3] = {0.0, 1.0, 0.0};
+        float sizeModifier = MAX (10.f, Camera::DISTANCE) / 10.f;        
+        float verticalIncl = sin (PI / 4 + 2 * PI * Animation::frame / FPS);
+        float angle = -45.f;
 
         // Lower right.
         glPushMatrix ();
         {
-            WING_BORDER_COLOR;
-            glTranslatef (0.f, 0.f, 5.5f);
-            glLineWidth (WING_BORDER_SIZE / sizeModifier);
-            glBegin (GL_LINE_STRIP);
-            for (unsigned int t = 0; t <= Bezier::BEZIER_PRECISION; ++t) {
-                glVertex3f (
-                    contour[t][0] = Bezier::getBezierPoint (true, true, true, t / (float)Bezier::BEZIER_PRECISION, 0),
-                    Bezier::getBezierPoint (true, true, true, t / (float)Bezier::BEZIER_PRECISION, 1),
-                    contour[t][1] = Bezier::getBezierPoint (true, true, true, t / (float)Bezier::BEZIER_PRECISION, 2)
-                    );
-            }
-            glEnd ();
+            // Animate and translate.
+            glTranslatef (0.f, 0.f, 5.5f);            
+            glRotatef (angle * verticalIncl, 0.0, 0.0, 1.0);
 
+            // Wing border
+            glPushMatrix ();
+            {
+                WING_BORDER_COLOR;
+                glLineWidth (WING_BORDER_SIZE / sizeModifier);
+                glBegin (GL_LINE_STRIP);
+                for (unsigned int t = 0; t <= Bezier::BEZIER_PRECISION; ++t) {
+                    glVertex3f (
+                        contour[t][0] = Bezier::getBezierPoint (true, true, true, t / (float)Bezier::BEZIER_PRECISION, 0),
+                        Bezier::getBezierPoint (true, true, true, t / (float)Bezier::BEZIER_PRECISION, 1),
+                        contour[t][1] = Bezier::getBezierPoint (true, true, true, t / (float)Bezier::BEZIER_PRECISION, 2)
+                        );
+                }
+                glEnd ();
+            }
+            glPopMatrix ();
+
+            // Wing fill.
             WING_FILL_COLOR_YELLOW;
             glTranslatef (0.1f, -0.05f, 0.1f);
             glScalef (0.99, 1.0, 0.99);
@@ -157,18 +172,28 @@ namespace Butterfly {
         // Upper right.
         glPushMatrix ();
         {
-            WING_BORDER_COLOR;
+            // Animate and translate.
             glTranslatef (0.f, 0.f, 4.5f);
-            glLineWidth (WING_BORDER_SIZE / sizeModifier);
-            glBegin (GL_LINE_STRIP);
-            for (unsigned int t = 0; t <= Bezier::BEZIER_PRECISION; ++t) {
-                glVertex3f (
-                    contour[t][0] = Bezier::getBezierPoint (true, false, true, t / (float)Bezier::BEZIER_PRECISION, 0),
-                    Bezier::getBezierPoint (true, false, true, t / (float)Bezier::BEZIER_PRECISION, 1),
-                    contour[t][1] = Bezier::getBezierPoint (true, false, true, t / (float)Bezier::BEZIER_PRECISION, 2)
-                    );
+            glRotatef (angle * verticalIncl, 0.0, 0.0, 1.0);
+
+            // Wing border
+            glPushMatrix ();
+            {
+                WING_BORDER_COLOR;
+                glLineWidth (WING_BORDER_SIZE / sizeModifier);
+
+                glLineWidth (WING_BORDER_SIZE / sizeModifier);
+                glBegin (GL_LINE_STRIP);
+                for (unsigned int t = 0; t <= Bezier::BEZIER_PRECISION; ++t) {
+                    glVertex3f (
+                        contour[t][0] = Bezier::getBezierPoint (true, false, true, t / (float)Bezier::BEZIER_PRECISION, 0),
+                        Bezier::getBezierPoint (true, false, true, t / (float)Bezier::BEZIER_PRECISION, 1),
+                        contour[t][1] = Bezier::getBezierPoint (true, false, true, t / (float)Bezier::BEZIER_PRECISION, 2)
+                        );
+                }
+                glEnd ();
             }
-            glEnd ();
+            glPopMatrix ();
 
             WING_FILL_COLOR_GREEN;
             glTranslatef (0.1f, -0.05f, -0.1f);
@@ -181,18 +206,27 @@ namespace Butterfly {
         // Lower left.
         glPushMatrix ();
         {
-            WING_BORDER_COLOR;
+
+            // Animate and translate.
             glTranslatef (0.f, 0.f, 5.5f);
-            glLineWidth (WING_BORDER_SIZE / sizeModifier);
-            glBegin (GL_LINE_STRIP);
-            for (unsigned int t = 0; t <= Bezier::BEZIER_PRECISION; ++t) {
-                glVertex3f (
-                    contour[t][0] = Bezier::getBezierPoint (true, true, false, t / (float)Bezier::BEZIER_PRECISION, 0),
-                    Bezier::getBezierPoint (true, true, false, t / (float)Bezier::BEZIER_PRECISION, 1),
-                    contour[t][1] = Bezier::getBezierPoint (true, true, false, t / (float)Bezier::BEZIER_PRECISION, 2)
-                    );
+            glRotatef (-angle * verticalIncl, 0.0, 0.0, 1.0);
+
+            // Wing border
+            glPushMatrix ();
+            {
+                WING_BORDER_COLOR;
+                glLineWidth (WING_BORDER_SIZE / sizeModifier);
+                glBegin (GL_LINE_STRIP);
+                for (unsigned int t = 0; t <= Bezier::BEZIER_PRECISION; ++t) {
+                    glVertex3f (
+                        contour[t][0] = Bezier::getBezierPoint (true, true, false, t / (float)Bezier::BEZIER_PRECISION, 0),
+                        Bezier::getBezierPoint (true, true, false, t / (float)Bezier::BEZIER_PRECISION, 1),
+                        contour[t][1] = Bezier::getBezierPoint (true, true, false, t / (float)Bezier::BEZIER_PRECISION, 2)
+                        );
+                }
+                glEnd ();
             }
-            glEnd ();
+            glPopMatrix ();
 
             WING_FILL_COLOR_BLUE;
             glTranslatef (-0.1f, -0.05f, 0.1f);
@@ -205,18 +239,26 @@ namespace Butterfly {
         // Upper left.
         glPushMatrix ();
         {
-            WING_BORDER_COLOR;
+            // Animate and translate.
             glTranslatef (0.f, 0.f, 4.5f);
-            glLineWidth (WING_BORDER_SIZE / sizeModifier);
-            glBegin (GL_LINE_STRIP);
-            for (unsigned int t = 0; t <= Bezier::BEZIER_PRECISION; ++t) {
-                glVertex3f (
-                    contour[t][0] = Bezier::getBezierPoint (true, false, false, t / (float)Bezier::BEZIER_PRECISION, 0),
-                    Bezier::getBezierPoint (true, false, false, t / (float)Bezier::BEZIER_PRECISION, 1),
-                    contour[t][1] = Bezier::getBezierPoint (true, false, false, t / (float)Bezier::BEZIER_PRECISION, 2)
-                    );
+            glRotatef (-angle * verticalIncl, 0.0, 0.0, 1.0);
+
+            // Wing border
+            glPushMatrix ();
+            {
+                WING_BORDER_COLOR;
+                glLineWidth (WING_BORDER_SIZE / sizeModifier);
+                glBegin (GL_LINE_STRIP);
+                for (unsigned int t = 0; t <= Bezier::BEZIER_PRECISION; ++t) {
+                    glVertex3f (
+                        contour[t][0] = Bezier::getBezierPoint (true, false, false, t / (float)Bezier::BEZIER_PRECISION, 0),
+                        Bezier::getBezierPoint (true, false, false, t / (float)Bezier::BEZIER_PRECISION, 1),
+                        contour[t][1] = Bezier::getBezierPoint (true, false, false, t / (float)Bezier::BEZIER_PRECISION, 2)
+                        );
+                }
+                glEnd ();
             }
-            glEnd ();
+            glPopMatrix ();
 
             WING_FILL_COLOR_RED;
             glTranslatef (-0.1f, -0.05f, -0.1f);

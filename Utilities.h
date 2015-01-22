@@ -16,9 +16,7 @@ namespace Main {
     static std::string TITLE = ">>> OpenGL Butterfly Project <<<";
 
     // Greeting message.
-    static std::string GREETING_MESSAGE = "\
->> Use 'w', 's', 'a', 'd' to zoom and move camera horizontally.\n\
->> Use up and down arrows to move camera verticaly\n";
+    static std::string GREETING_MESSAGE = " >> Use 'w', 's', 'a', 'd' to zoom and move camera horizontally.\n >> Use up and down arrows to move camera verticaly\n";
 
     // Prints formatted greeting message.
     static void printHeader () {
@@ -178,5 +176,25 @@ namespace Bezier {
     }
 
 
+}
+
+// Animation controls.
+namespace Animation {
+
+    // Static FPS
+#define FPS 60
+
+    // Animation on/off control.
+    static bool isAnimOn = false;
+
+    // Current frame.
+    static unsigned int frame = 0;
+
+    // Time delta for measuring elapsed time
+    static float dt = 0.f;
+
+    // Clock's time.
+    clock_t begin = 0;
+    clock_t end = 0;
 }
 #endif

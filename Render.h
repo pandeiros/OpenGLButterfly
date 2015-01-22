@@ -1,6 +1,7 @@
 #ifndef _RENDER_
 #define _RENDER_
 
+#include <ctime>
 #include "GLUT.H"
 #include "Utilities.h"
 
@@ -46,6 +47,9 @@ namespace Render {
         Camera::DIR_X = sin ((Camera::ANGLE_X + Camera::DELTA_ANGLE_X) / 180 * PI);
         Camera::DIR_Y = -sin ((Camera::ANGLE_Y + Camera::DELTA_ANGLE_Y) / 180 * PI);
         Camera::DIR_Z = -cos ((Camera::ANGLE_X + Camera::DELTA_ANGLE_X) / 180 * PI);
+
+        // Start measuring time.
+        Animation::begin = clock ();
     }
 
     // Reshape function.
@@ -93,6 +97,19 @@ namespace Render {
 
     // Main render function.
     void renderScene (void) {
+        // Animation update.
+        if (Animation::isAnimOn) {
+            if (Animation::dt >= (1.f / (float)FPS)) {
+                Animation::dt -= (1.f / (float)FPS);
+                Animation::frame = (Animation::frame + 1) % FPS;
+            }
+            else {
+                Animation::end = clock ();
+                Animation::dt += (Animation::end - Animation::begin) / (float)CLOCKS_PER_SEC;
+                Animation::begin = clock ();
+            }
+        }
+
         // Clear buffers and load identity matrix.       
         glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glLoadIdentity ();
@@ -103,8 +120,6 @@ namespace Render {
                    Camera::POSITION_X + Camera::DIR_X, Camera::POSITION_Y + Camera::DIR_Y, Camera::POSITION_Z + Camera::DIR_Z,
                    0.0f, 1.0f, 0.0f);
         updateLight ();
-
-
 
         // Create floor.
         glPushMatrix ();

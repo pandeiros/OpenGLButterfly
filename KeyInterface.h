@@ -10,10 +10,11 @@
 #define KEY_MOVE_LEFT 'a'
 #define KEY_MOVE_FORWARD 'w'
 #define KEY_MOVE_BACKWARD 's'
+#define KEY_ANIM_ON_OFF ' '
 #define KEY_MOVE_UP GLUT_KEY_UP
 #define KEY_MOVE_DOWN GLUT_KEY_DOWN
-#define KEY_LIGHT_DOWN GLUT_KEY_F4
-#define KEY_LIGHT_UP GLUT_KEY_F5
+#define KEY_LIGHT_DOWN GLUT_KEY_F1
+#define KEY_LIGHT_UP GLUT_KEY_F2
 #define KEY_BEZIER_UP GLUT_KEY_PAGE_UP
 #define KEY_BEZIER_DOWN GLUT_KEY_PAGE_DOWN
 #define KEY_FREQ_UP GLUT_KEY_RIGHT
@@ -42,6 +43,9 @@ namespace Keyboard {
                 break;
             case KEY_MOVE_LEFT:
                 Camera::DELTA_Z = -Camera::SPEED;
+                break;
+            case KEY_ANIM_ON_OFF:
+                Animation::isAnimOn = !Animation::isAnimOn;
                 break;
 
             default:
@@ -92,7 +96,7 @@ namespace Keyboard {
             case KEY_BEZIER_DOWN:
                 Bezier::BEZIER_PRECISION = MAX (MIN_BEZIER_PREC, Bezier::BEZIER_PRECISION - 2);
                 break;
-         
+
             default:
                 break;
         }
@@ -110,7 +114,7 @@ namespace Keyboard {
 
             default:
                 break;
-            
+
         }
     }
 }
