@@ -6,25 +6,30 @@
 
 // Key bindings -------------------------------
 #define KEY_EXIT_DEFAULT 27     // Escape key.
-#define KEY_MOVE_RIGHT 'd'
+#define KEY_MOVE_RIGHT 'D'
 #define KEY_MOVE_LEFT 'a'
 #define KEY_MOVE_FORWARD 'w'
 #define KEY_MOVE_BACKWARD 's'
 #define KEY_ANIM_ON_OFF ' '
+#define KEY_STEER_RIGHT 'l'
+#define KEY_STEER_LEFT 'j'
+#define KEY_STEER_FORW 'i'
+#define KET_STEER_BACK 'k'
 #define KEY_MOVE_UP GLUT_KEY_UP
 #define KEY_MOVE_DOWN GLUT_KEY_DOWN
 #define KEY_LIGHT_DOWN GLUT_KEY_F1
 #define KEY_LIGHT_UP GLUT_KEY_F2
 #define KEY_BEZIER_UP GLUT_KEY_PAGE_UP
 #define KEY_BEZIER_DOWN GLUT_KEY_PAGE_DOWN
-#define KEY_FREQ_UP GLUT_KEY_RIGHT
-#define KEY_FREQ_DOWN GLUT_KEY_LEFT
 // --------------------------------------------
 
 namespace Keyboard {
 
     // Actions binded to key pressed event.
     void handlePressedKey (unsigned char key, int xx, int yy) {
+        if (key == 'd')
+            key = 'D';
+
         switch (key) {
             // Program termination.
             case KEY_EXIT_DEFAULT:
@@ -44,6 +49,8 @@ namespace Keyboard {
             case KEY_MOVE_LEFT:
                 Camera::DELTA_Z = -Camera::SPEED;
                 break;
+
+                // Animation.
             case KEY_ANIM_ON_OFF:
                 Animation::isAnimOn = !Animation::isAnimOn;
                 break;
@@ -56,6 +63,9 @@ namespace Keyboard {
     // Actions binded to key release event.
     void handleReleasedKey (unsigned char key, int xx, int yy)	// pressing this keys causes moving light source, moving tail, quiting program
     {
+        if (key == 'd')
+            key = 'D';
+
         switch (key) {
 
             // Camera stop movement bindings.

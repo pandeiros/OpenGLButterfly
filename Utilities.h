@@ -6,7 +6,7 @@
 #include <iostream>
 #include "GLUT.H" 
 
-#define PI  3.1415
+#define PI  3.1415f
 #define MIN(a,b) (((a) < (b)) ? (a) : (b))
 #define MAX(a,b) (((a) > (b)) ? (a) : (b))
 
@@ -15,8 +15,11 @@ namespace Main {
     // Title
     static std::string TITLE = ">>> OpenGL Butterfly Project <<<";
 
-    // Greeting message.
-    static std::string GREETING_MESSAGE = " >> Use 'w', 's', 'a', 'd' to zoom and move camera horizontally.\n >> Use up and down arrows to move camera verticaly\n";
+    // Greeting messages.
+    static std::string AUTHOR_INFO = " Author: Pawel Kaczyski\n Date: 23.01.2015\n Made at: Faculty of Electronics and Information Technology\n";
+    static std::string CAMERA_MOVEMENT = " >> Use 'w', 's', 'a', 'd' to zoom and move camera horizontally.\n >> Use up and down arrows to move camera verticaly.\n";
+    static std::string LIGHT_INFO = " >> Use F1 and F2 to adjust light intensity.\n >> Use Page Up and Page Down to adjust Bezier curve complexity.\n";
+    static std::string ANIM_INFO = " >> Hit Space to turn animation on/off.\n";
 
     // Prints formatted greeting message.
     static void printHeader () {
@@ -24,7 +27,15 @@ namespace Main {
         std::cout << std::setw (lineSize) << std::setfill ('=') << "\n";
         std::cout << "               " << TITLE << "\n";
         std::cout << std::setw (lineSize) << std::setfill ('-') << "\n";
-        std::cout << GREETING_MESSAGE;
+        std::cout << AUTHOR_INFO;
+        std::cout << std::setw (lineSize) << std::setfill ('-') << "\n";
+        std::cout << CAMERA_MOVEMENT;
+        std::cout << std::setw (lineSize) << std::setfill ('-') << "\n";
+        std::cout << LIGHT_INFO;
+        std::cout << std::setw (lineSize) << std::setfill ('-') << "\n";
+        std::cout << ANIM_INFO;
+        std::cout << std::setw (lineSize) << std::setfill ('-') << "\n";
+        std::cout << "\n                           HAVE FUN :D\n\n";
         std::cout << std::setw (lineSize) << std::setfill ('=') << "\n";
     }
 }
@@ -182,18 +193,27 @@ namespace Bezier {
 namespace Animation {
 
     // Static FPS
-#define FPS 60
+    static unsigned int FPS = 60;
 
     // Animation on/off control.
     static bool isAnimOn = false;
 
     // Current frame.
-    static unsigned int frame = 0;
+    static unsigned long frame = 0;
 
     // Time delta for measuring elapsed time
     static float dt = 0.f;
 
-    // Clock's time.
+    // Wing frequency modifier.
+    static float modifier = 1.5f;
+
+    /// Position and wing inclinations.
+
+    static float wingInclination = -PI / 2.f;
+    static float bodyInclination = -PI;
+
+    /// Clock's times.
+
     clock_t begin = 0;
     clock_t end = 0;
 }

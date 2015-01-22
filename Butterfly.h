@@ -10,6 +10,7 @@
 namespace Butterfly {
 
     // Colors.
+#define COLOR_BLACK glColor3ub(0,0,0)
 #define HEAD_COLOR glColor3ub(45, 45, 45)
 #define BODY_COLOR glColor3ub(30, 30, 30)
 #define WING_BORDER_COLOR glColor3ub(240, 240, 240)
@@ -89,13 +90,14 @@ namespace Butterfly {
     // Antennae draw function.
     // Two line strips created with bezier curves.
     void drawAntennae () {
+
         // Line width modifier based on Camera distance.
         float sizeModifier = MAX (10.f, Camera::DISTANCE) / 10.f;
 
         // Right antenna.
         glPushMatrix ();
         {
-            HEAD_COLOR;
+            COLOR_BLACK;
             glTranslatef (0.3f, 0.3f, 0.f);
             glLineWidth (ANTENNA_SIZE / sizeModifier);
             glBegin (GL_LINE_STRIP);
@@ -113,7 +115,7 @@ namespace Butterfly {
         // Left antenna.
         glPushMatrix ();
         {
-            HEAD_COLOR;
+            COLOR_BLACK;
             glTranslatef (-0.3f, 0.3f, 0.f);
             glLineWidth (ANTENNA_SIZE / sizeModifier);
             glBegin (GL_LINE_STRIP);
@@ -132,16 +134,20 @@ namespace Butterfly {
     // Wings draw function.
     // Four wings
     void drawWings () {
-        float sizeModifier = MAX (10.f, Camera::DISTANCE) / 10.f;        
-        float verticalIncl = sin (PI / 4 + 2 * PI * Animation::frame / FPS);
+        float sizeModifier = MAX (10.f, Camera::DISTANCE) / 10.f;
+        if (Animation::isAnimOn)
+            Animation::wingInclination += Animation::modifier * 2.f * PI / (float)Animation::FPS;
+        float rotIncl = sin (Animation::wingInclination);
+
         float angle = -45.f;
+        float deltaPos = 3.f;
 
         // Lower right.
         glPushMatrix ();
         {
             // Animate and translate.
-            glTranslatef (0.f, 0.f, 5.5f);            
-            glRotatef (angle * verticalIncl, 0.0, 0.0, 1.0);
+            glTranslatef (0.f, 0.f, 5.5f);
+            glRotatef (angle * rotIncl + 15, 0.0, 0.0, 1.0);
 
             // Wing border
             glPushMatrix ();
@@ -174,7 +180,7 @@ namespace Butterfly {
         {
             // Animate and translate.
             glTranslatef (0.f, 0.f, 4.5f);
-            glRotatef (angle * verticalIncl, 0.0, 0.0, 1.0);
+            glRotatef (angle * rotIncl + 15, 0.0, 0.0, 1.0);
 
             // Wing border
             glPushMatrix ();
@@ -209,7 +215,7 @@ namespace Butterfly {
 
             // Animate and translate.
             glTranslatef (0.f, 0.f, 5.5f);
-            glRotatef (-angle * verticalIncl, 0.0, 0.0, 1.0);
+            glRotatef (-angle * rotIncl -15, 0.0, 0.0, 1.0);
 
             // Wing border
             glPushMatrix ();
@@ -241,7 +247,7 @@ namespace Butterfly {
         {
             // Animate and translate.
             glTranslatef (0.f, 0.f, 4.5f);
-            glRotatef (-angle * verticalIncl, 0.0, 0.0, 1.0);
+            glRotatef (-angle * rotIncl -15, 0.0, 0.0, 1.0);
 
             // Wing border
             glPushMatrix ();

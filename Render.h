@@ -27,7 +27,7 @@ namespace Render {
 
         // Set up lightning.
         glLightfv (GL_LIGHT0, GL_AMBIENT, grayAmbientLight);
-        glLightfv (GL_LIGHT0, GL_SPECULAR, whiteSpecularLight);
+        //glLightfv (GL_LIGHT0, GL_SPECULAR, whiteSpecularLight);
         glLightfv (GL_LIGHT0, GL_DIFFUSE, whiteDiffuseLight);
         glLightfv (GL_LIGHT0, GL_POSITION, lightPosition);
         glLightf (GL_LIGHT0, GL_LINEAR_ATTENUATION, Light::LINEAR_ATT);
@@ -71,6 +71,48 @@ namespace Render {
         glViewport (0, 0, w, h);
     }
 
+    // Create floor.
+    void createFloor () {
+        glPushMatrix ();
+        {
+            int FLOOR_SIZE = 70;
+
+            // Fuchsia :D
+            glColor3f (1.f, 0.0f, 1.f);
+            glTranslatef (0.0f, -10.0f, 0.0f);
+            for (int i = -FLOOR_SIZE; i < FLOOR_SIZE; ++i) {
+
+                glBegin (GL_TRIANGLE_STRIP);
+                for (int j = -FLOOR_SIZE; j < FLOOR_SIZE + 20; ++j) {
+                    glVertex3f (i, 0.0f, j);
+                    glVertex3f (i + 1, 0.0f, j);
+                }
+                glEnd ();
+            }
+        }
+        glPopMatrix ();
+    }
+
+    //Render a cone to indicate light position and direction.
+    void createLightCone () {
+        glPushMatrix ();
+        {
+            GLfloat matEmmision[] = {0.9, 0.9, 0.9, 0.9};
+            glMaterialfv (GL_FRONT, GL_EMISSION, matEmmision);
+
+            GLUquadricObj *base = gluNewQuadric ();
+            glColor3ub (200, 200, 200);
+            glTranslatef (Light::POS_X, Light::POS_Y, Light::POS_Z);
+            glRotatef (45, 1.0, 0.0, 0.0);
+            glRotatef (180, 0.0, 1.0, 0.0);
+            glutSolidCone (0.5, 1.5, 30, 30);
+
+            GLfloat zeroEmmision[] = {0.0, 0.0, 0.0, 1.0};
+            glMaterialfv (GL_FRONT, GL_EMISSION, zeroEmmision);
+        }
+        glPopMatrix ();
+    }
+
     // Update camera parameters.
     void updateCameraPosition () {
 
@@ -99,9 +141,21 @@ namespace Render {
     void renderScene (void) {
         // Animation update.
         if (Animation::isAnimOn) {
-            if (Animation::dt >= (1.f / (float)FPS)) {
-                Animation::dt -= (1.f / (float)FPS);
-                Animation::frame = (Animation::frame + 1) % FPS;
+            if (Animation::dt >= (1.f / (float)Animation::FPS)) {
+                Animation::dt -= (1.f / (float)Animation::FPS);
+                Animation::frame = Animation::frame + 1;
+
+                if ((Animation::frame % Animation::FPS) < 20) {
+                    Animation::modifier = 1.5f;
+                }
+                else {
+                    Animation::modifier = 0.75f;
+                }
+
+                if (Animation::frame % Animation::FPS == 0) {
+                    Animation::wingInclination = -PI / 2.f;
+                    Animation::bodyInclination = -PI;
+                }
             }
             else {
                 Animation::end = clock ();
@@ -121,48 +175,24 @@ namespace Render {
                    0.0f, 1.0f, 0.0f);
         updateLight ();
 
-        // Create floor.
-        glPushMatrix ();
-        {
-            int FLOOR_SIZE = 70;
 
-            // Fuchsia :D
-            glColor3f (1.f, 0.0f, 1.f);
-            glTranslatef (0.0f, -6.0f, 0.0f);
-            for (int i = -FLOOR_SIZE; i < FLOOR_SIZE; ++i) {
-
-                glBegin (GL_TRIANGLE_STRIP);
-                for (int j = -FLOOR_SIZE; j < FLOOR_SIZE+20; ++j) {
-                    glVertex3f (i, 0.0f, j);
-                    glVertex3f (i + 1, 0.0f, j);
-                }
-                glEnd ();
-            }
-        }
-        glPopMatrix ();
-        // End creating floor
-
-        //Render a cone to indicate light position and direction.
-        glPushMatrix ();
-        {
-            GLfloat matEmmision[] = {0.9, 0.9, 0.9, 0.9};
-            glMaterialfv (GL_FRONT, GL_EMISSION, matEmmision);
-
-            GLUquadricObj *base = gluNewQuadric ();
-            glColor3ub (200, 200, 200);
-            glTranslatef (Light::POS_X, Light::POS_Y, Light::POS_Z);
-            glRotatef (45, 1.0, 0.0, 0.0);
-            glRotatef (180, 0.0, 1.0, 0.0);
-            glutSolidCone (0.5, 1.5, 30, 30);
-
-            GLfloat zeroEmmision[] = {0.0, 0.0, 0.0, 1.0};
-            glMaterialfv (GL_FRONT, GL_EMISSION, zeroEmmision);
-        }
-        glPopMatrix ();
+        // Render some misc.
+        createFloor ();
+        createLightCone ();
 
 
         // Render butterfly.
-        Butterfly::renderButterfly ();
+        glPushMatrix ();
+        {            
+            if (Animation::isAnimOn)
+                Animation::bodyInclination += Animation::modifier * 2.f * PI / (float)Animation::FPS;
+            float posIncl = sin (Animation::bodyInclination);
+            float deltaPos = 3.f;
+
+            glTranslatef (0.0, deltaPos * posIncl + 3, 0.0);
+            Butterfly::renderButterfly ();
+        }
+        glPopMatrix ();
 
 
         // Make it visible.
