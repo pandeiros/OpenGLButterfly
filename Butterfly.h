@@ -12,8 +12,10 @@ namespace Butterfly {
 #define HEAD_COLOR glColor3ub(45, 45, 45)
 #define BODY_COLOR glColor3ub(30, 30, 30)
 #define WING_BORDER_COLOR glColor3ub(240, 240, 240)
-#define WING_FILL_COLOR1 glColor3ub(200, 50, 150)
-#define WING_FILL_COLOR2 glColor3ub(50, 150, 200)
+#define WING_FILL_COLOR_YELLOW glColor3ub(250, 230, 20)
+#define WING_FILL_COLOR_BLUE glColor3ub(85, 134, 210)
+#define WING_FILL_COLOR_RED glColor3ub(240, 50, 5)
+#define WING_FILL_COLOR_GREEN glColor3ub(160, 220, 60)
 #define WING_BORDER_SIZE 5.f
 #define ANTENNA_SIZE 5.f
 
@@ -79,7 +81,7 @@ namespace Butterfly {
     }
 
     // Antennae draw function.
-    //
+    // Two line strips created with bezier curves.
     void drawAntennae () {
         // Line width modifier based on Camera distance.
         float sizeModifier = MAX (10.f, Camera::DISTANCE) / 10.f;
@@ -121,7 +123,8 @@ namespace Butterfly {
         glPopMatrix ();
     }
 
-   
+    // Wings draw function.
+    // Four wings
     void drawWings () {
         float sizeModifier = MAX (10.f, Camera::DISTANCE) / 10.f;
         gleDouble contour[MAX_BEZIER_PREC + 1][2];
@@ -143,7 +146,7 @@ namespace Butterfly {
             }
             glEnd ();
 
-            WING_FILL_COLOR1;
+            WING_FILL_COLOR_YELLOW;
             glTranslatef (0.1f, -0.05f, 0.1f);
             glScalef (0.99, 1.0, 0.99);
             glRotatef (90.f, 1.f, 0.f, 0.f);            
@@ -167,7 +170,7 @@ namespace Butterfly {
             }
             glEnd ();
 
-            WING_FILL_COLOR2;
+            WING_FILL_COLOR_GREEN;
             glTranslatef (0.1f, -0.05f, -0.1f);
             glScalef (0.99, 1.0, 0.99);
             glRotatef (90.f, 1.f, 0.f, 0.f);
@@ -191,7 +194,7 @@ namespace Butterfly {
             }
             glEnd ();
 
-            WING_FILL_COLOR1;
+            WING_FILL_COLOR_BLUE;
             glTranslatef (-0.1f, -0.05f, 0.1f);
             glScalef (0.99, 1.0, 0.99);
             glRotatef (90.f, 1.f, 0.f, 0.f);
@@ -215,7 +218,7 @@ namespace Butterfly {
             }
             glEnd ();
 
-            WING_FILL_COLOR2;
+            WING_FILL_COLOR_RED;
             glTranslatef (-0.1f, -0.05f, -0.1f);
             glScalef (0.99, 1.0, 0.99);
             glRotatef (90.f, 1.f, 0.f, 0.f);

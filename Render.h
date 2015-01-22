@@ -109,7 +109,7 @@ namespace Render {
         // Create floor.
         glPushMatrix ();
         {
-            int FLOOR_SIZE = 50;
+            int FLOOR_SIZE = 70;
 
             // Fuchsia :D
             glColor3f (1.f, 0.0f, 1.f);
@@ -117,7 +117,7 @@ namespace Render {
             for (int i = -FLOOR_SIZE; i < FLOOR_SIZE; ++i) {
 
                 glBegin (GL_TRIANGLE_STRIP);
-                for (int j = -FLOOR_SIZE; j < FLOOR_SIZE; ++j) {
+                for (int j = -FLOOR_SIZE; j < FLOOR_SIZE+20; ++j) {
                     glVertex3f (i, 0.0f, j);
                     glVertex3f (i + 1, 0.0f, j);
                 }
