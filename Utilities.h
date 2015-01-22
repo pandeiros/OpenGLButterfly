@@ -110,6 +110,7 @@ namespace Bezier {
 
 #define CTRL_POINTS 5
 #define MIN_BEZIER_PREC 0
+#define MAX_BEZIER_PREC 50
 
     // How many vertexes in a curve.
     static unsigned int BEZIER_PRECISION = 10;

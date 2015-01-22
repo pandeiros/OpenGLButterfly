@@ -87,7 +87,7 @@ namespace Keyboard {
                 Light::LINEAR_ATT = MIN (MAX_LINEAR_ATT, Light::LINEAR_ATT + 0.01f);
                 break;
             case KEY_BEZIER_UP:
-                Bezier::BEZIER_PRECISION = Bezier::BEZIER_PRECISION + 2;
+                Bezier::BEZIER_PRECISION = MIN (MAX_BEZIER_PREC, Bezier::BEZIER_PRECISION + 2);
                 break;
             case KEY_BEZIER_DOWN:
                 Bezier::BEZIER_PRECISION = MAX (MIN_BEZIER_PREC, Bezier::BEZIER_PRECISION - 2);
