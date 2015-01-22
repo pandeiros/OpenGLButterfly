@@ -14,6 +14,10 @@
 #define KEY_MOVE_DOWN GLUT_KEY_DOWN
 #define KEY_LIGHT_DOWN GLUT_KEY_F4
 #define KEY_LIGHT_UP GLUT_KEY_F5
+#define KEY_BEZIER_UP GLUT_KEY_PAGE_UP
+#define KEY_BEZIER_DOWN GLUT_KEY_PAGE_DOWN
+#define KEY_FREQ_UP GLUT_KEY_RIGHT
+#define KEY_FREQ_DOWN GLUT_KEY_LEFT
 // --------------------------------------------
 
 namespace Keyboard {
@@ -81,6 +85,12 @@ namespace Keyboard {
                 break;
             case KEY_LIGHT_DOWN:
                 Light::LINEAR_ATT = MIN (MAX_LINEAR_ATT, Light::LINEAR_ATT + 0.01f);
+                break;
+            case KEY_BEZIER_UP:
+                Bezier::BEZIER_PRECISION = Bezier::BEZIER_PRECISION + 2;
+                break;
+            case KEY_BEZIER_DOWN:
+                Bezier::BEZIER_PRECISION = MAX (MIN_BEZIER_PREC, Bezier::BEZIER_PRECISION - 2);
                 break;
          
             default:

@@ -17,8 +17,8 @@ namespace Main {
 
     // Greeting message.
     static std::string GREETING_MESSAGE = "\
- >> Use 'w', 's', 'a', 'd' to zoom and move camera horizontally.\n\
- >> Use up and down arrows to move camera verticaly\n";
+                                                                                                                                                                                                                   >> Use 'w', 's', 'a', 'd' to zoom and move camera horizontally.\n\
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            >> Use up and down arrows to move camera verticaly\n";
 
 
     // Prints formatted greeting message.
@@ -49,7 +49,7 @@ namespace Window {
     // Window title.
 #define TITLE "Butterfly"
 
-// Display mode.
+    // Display mode.
 #define MODE (GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA)
 
 }
@@ -64,7 +64,7 @@ namespace Camera {
     static float DELTA_X = 0.0f;
     static float DELTA_Y = 0.0f;
     static float DELTA_Z = 0.0f;
-    static float SPEED = 0.3f;
+    static float SPEED = 8.f;
 
     /// Direction.
 
@@ -84,7 +84,7 @@ namespace Camera {
 // Light position, spot and intensity parameters.
 namespace Light {
 
-// Border values for linear attenuation.
+    // Border values for linear attenuation.
 
 #define MAX_LINEAR_ATT 0.1f
 #define MIN_LINEAR_ATT 0.01f
@@ -105,4 +105,57 @@ namespace Light {
     static float LINEAR_ATT = 0.05f;
 }
 
+// Bezier curve parameters.
+namespace Bezier {
+
+#define CTRL_POINTS 5
+#define MIN_BEZIER_PREC 0
+
+    // How many vertexes in a curve.
+    static unsigned int BEZIER_PRECISION = 10;
+
+    // Control points for lower right wing (left is symmetrical).
+    static float lowerCtrlPoints[CTRL_POINTS][3] = {
+        {0.f, 0.f, 2.f},
+        {10.f, 0.f, 30.f},
+        {30.f, 0.f, 0.f},
+        {1.f, 0.f, 0.f}
+    };
+
+    // Control points for upper right wing (left is symmetrical).
+    static float upperCtrlPoints[CTRL_POINTS][3] = {
+        {0.f, 0.f, 1.f},
+        {30.f, 0.f, 0.f},
+        {30.f, 0.f, -30.f},
+        {0.f, 0.f, -12.f}
+    };
+
+    int factorial (int n) {
+        return (n == 1 || n == 0) ? 1 : factorial (n - 1) * n;
+    }
+
+    float fBernstein (unsigned int i, float t) {
+        return (factorial (CTRL_POINTS-1) * std::pow (t, i) * std::pow (1 - t, CTRL_POINTS-1 - i) / factorial (i) / factorial (CTRL_POINTS-1 - i));
+    }
+
+    // Calculates points for a curve.
+    float getBezierPoint (bool lower, bool left, float t, unsigned int coord) {
+        float point = 0.f;
+
+        for (unsigned int i = 0; i < CTRL_POINTS-1; ++i) {
+            if (lower && left)
+                point += lowerCtrlPoints[i][coord] * fBernstein (i, t);
+            else if (!lower && left)
+                point += upperCtrlPoints[i][coord] * fBernstein (i, t);
+            else if (lower && !left)
+                point += lowerCtrlPoints[i][coord] * (coord == 0 ? -1 : 1) * fBernstein (i, t);
+            else
+                point += upperCtrlPoints[i][coord] * (coord == 0 ? -1 : 1) * fBernstein (i, t);
+        }
+
+        return point;
+    }
+
+
+}
 #endif

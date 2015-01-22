@@ -5,12 +5,15 @@
 #include <ctime>
 #include "GLUT.H"
 #include "gle.h"
+#include "Utilities.h"
 
 namespace Butterfly {
 
 #define HEAD_COLOR glColor3ub(45, 45, 45)
 #define BODY_COLOR glColor3ub(30, 30, 30)
-#define WING_PRECISION 5
+#define WING_COLOR glColor3ub(200, 150, 100)
+
+    // TEMP
     static int b = 2;
 
     // Body draw function.
@@ -75,89 +78,80 @@ namespace Butterfly {
 
     }
 
-    void drawGeometry (GLenum mode) {
-        glPointSize (5.f);
-        glBegin (GL_LINE_STRIP);
-        //glNormal3f (0.0, 0.0, 1.0);
-        glVertex3f (30.0, 30.0, 0.0);
-        glVertex3f (50.0, 60.0, 0.0);
-        glVertex3f (70.0, 40.0, 0.0);
-        glEnd ();
-        if (mode == GL_FEEDBACK)
-            glPassThrough (1.0);
-        glBegin (GL_POINTS);
-        glVertex3f (-100.0, -100.0, -100.0);  /*  will be clipped  */
-        glEnd ();
-        if (mode == GL_FEEDBACK)
-            glPassThrough (2.0);
-        glBegin (GL_POINTS);
-        //glNormal3f (0.0, 0.0, 1.0);
-        glVertex3f (50.0, 50.0, 0.0);
-        glEnd ();
-    }
-
-    void print3DcolorVertex (GLint size, GLint *count,
-                             GLfloat *buffer) {
-        int i;
-
-        printf ("  ");
-        for (i = 0; i < 7; i++) {
-            printf ("%4.2f ", buffer[size - (*count)]);
-            *count = *count - 1;
-        }
-        printf ("\n");
-    }
-
-    void printBuffer (GLint size, GLfloat *buffer) {
-        GLint count;
-        GLfloat token;
-
-        count = size;
-        while (count) {
-            token = buffer[size - count]; count--;
-            if (token == GL_PASS_THROUGH_TOKEN) {
-                printf ("GL_PASS_THROUGH_TOKEN\n");
-                printf ("  %4.2f\n", buffer[size - count]);
-                count--;
-            }
-            else if (token == GL_POINT_TOKEN) {
-                printf ("GL_POINT_TOKEN\n");
-                print3DcolorVertex (size, &count, buffer);
-            }
-            else if (token == GL_LINE_TOKEN) {
-                printf ("GL_LINE_TOKEN\n");
-                print3DcolorVertex (size, &count, buffer);
-                print3DcolorVertex (size, &count, buffer);
-            }
-            else if (token == GL_LINE_RESET_TOKEN) {
-                printf ("GL_LINE_RESET_TOKEN\n");
-                print3DcolorVertex (size, &count, buffer);
-                print3DcolorVertex (size, &count, buffer);
-            }
-        }
-    }
+   
     void drawWings () {
-            GLfloat feedBuffer[1024];
-            GLint size;
-        
-            //glMatrixMode (GL_PROJECTION);
-            //glLoadIdentity ();
-            //glOrtho (0.0, 100.0, 0.0, 100.0, 0.0, 1.0);
-        
-            //glClearColor (0.0, 0.0, 0.0, 0.0);
-            //glClear (GL_COLOR_BUFFER_BIT);
-            
-            glFeedbackBuffer (1024, GL_3D_COLOR, feedBuffer);
-            glRenderMode (GL_FEEDBACK);
-            drawGeometry (GL_FEEDBACK);
-        
-            size = glRenderMode (GL_RENDER);
-            drawGeometry (GL_RENDER);
-            if (b > 0) {
-                printBuffer (size, feedBuffer);
-                b--;
+
+        // Lower right.
+        glPushMatrix ();
+        {
+            WING_COLOR;
+            glTranslatef (0.f, 0.f, 5.5f);
+            glLineWidth (5.f);
+            glBegin (GL_LINE_STRIP);
+            for (unsigned int t = 0; t <= Bezier::BEZIER_PRECISION; ++t) {
+                glVertex3f (
+                    Bezier::getBezierPoint (true, true, t / (float)Bezier::BEZIER_PRECISION, 0),
+                    Bezier::getBezierPoint (true, true, t / (float)Bezier::BEZIER_PRECISION, 1),
+                    Bezier::getBezierPoint (true, true, t / (float)Bezier::BEZIER_PRECISION, 2)
+                    );
             }
-            
+            glEnd ();
+        }
+        glPopMatrix ();
+
+        // Upper right.
+        glPushMatrix ();
+        {
+            WING_COLOR;
+            glTranslatef (0.f, 0.f, 4.5f);
+            glLineWidth (5.f);
+            glBegin (GL_LINE_STRIP);
+            for (unsigned int t = 0; t <= Bezier::BEZIER_PRECISION; ++t) {
+                glVertex3f (
+                    Bezier::getBezierPoint (false, true, t / (float)Bezier::BEZIER_PRECISION, 0),
+                    Bezier::getBezierPoint (false, true, t / (float)Bezier::BEZIER_PRECISION, 1),
+                    Bezier::getBezierPoint (false, true, t / (float)Bezier::BEZIER_PRECISION, 2)
+                    );
+            }
+            glEnd ();
+        }
+        glPopMatrix ();
+
+        // Lower left.
+        glPushMatrix ();
+        {
+            WING_COLOR;
+            glTranslatef (0.f, 0.f, 5.5f);
+            glLineWidth (5.f);
+            glBegin (GL_LINE_STRIP);
+            for (unsigned int t = 0; t <= Bezier::BEZIER_PRECISION; ++t) {
+                glVertex3f (
+                    Bezier::getBezierPoint (true, false, t / (float)Bezier::BEZIER_PRECISION, 0),
+                    Bezier::getBezierPoint (true, false, t / (float)Bezier::BEZIER_PRECISION, 1),
+                    Bezier::getBezierPoint (true, false, t / (float)Bezier::BEZIER_PRECISION, 2)
+                    );
+            }
+            glEnd ();
+        }
+        glPopMatrix ();
+
+        // Upper left.
+        glPushMatrix ();
+        {
+            WING_COLOR;
+            glTranslatef (0.f, 0.f, 4.5f);
+            glLineWidth (5.f);
+            glBegin (GL_LINE_STRIP);
+            for (unsigned int t = 0; t <= Bezier::BEZIER_PRECISION; ++t) {
+                glVertex3f (
+                    Bezier::getBezierPoint (false, false, t / (float)Bezier::BEZIER_PRECISION, 0),
+                    Bezier::getBezierPoint (false, false, t / (float)Bezier::BEZIER_PRECISION, 1),
+                    Bezier::getBezierPoint (false, false, t / (float)Bezier::BEZIER_PRECISION, 2)
+                    );
+            }
+            glEnd ();
+        }
+        glPopMatrix ();
     }
 
     // Butterfly render function.
