@@ -127,7 +127,7 @@ namespace Butterfly {
     // Four wings
     void drawWings () {
         float sizeModifier = MAX (10.f, Camera::DISTANCE) / 10.f;
-        gleDouble contour[MAX_BEZIER_PREC + 1][2];
+        gleDouble contour[MAX_BEZIER_PREC + 2][2];
         gleDouble up[3] = {0.0, 1.0, 0.0};
 
         // Lower right.
@@ -149,8 +149,8 @@ namespace Butterfly {
             WING_FILL_COLOR_YELLOW;
             glTranslatef (0.1f, -0.05f, 0.1f);
             glScalef (0.99, 1.0, 0.99);
-            glRotatef (90.f, 1.f, 0.f, 0.f);            
-            gleScrew (Bezier::BEZIER_PRECISION, contour, NULL, up, 0, -0.1, 0);
+            glRotatef (90.f, 1.f, 0.f, 0.f);
+            gleScrew (Bezier::BEZIER_PRECISION + 1, contour, NULL, up, 0, -0.1, 0);
         }
         glPopMatrix ();
 
@@ -174,7 +174,7 @@ namespace Butterfly {
             glTranslatef (0.1f, -0.05f, -0.1f);
             glScalef (0.99, 1.0, 0.99);
             glRotatef (90.f, 1.f, 0.f, 0.f);
-            gleScrew (Bezier::BEZIER_PRECISION, contour, NULL, up, 0, -0.1, 0);
+            gleScrew (Bezier::BEZIER_PRECISION + 1, contour, NULL, up, 0, -0.1, 0);
         }
         glPopMatrix ();
 
@@ -198,7 +198,7 @@ namespace Butterfly {
             glTranslatef (-0.1f, -0.05f, 0.1f);
             glScalef (0.99, 1.0, 0.99);
             glRotatef (90.f, 1.f, 0.f, 0.f);
-            gleScrew (Bezier::BEZIER_PRECISION, contour, NULL, up, 0, -0.1, 0);
+            gleScrew (Bezier::BEZIER_PRECISION + 1, contour, NULL, up, 0, -0.1, 0);
         }
         glPopMatrix ();
 
@@ -222,7 +222,7 @@ namespace Butterfly {
             glTranslatef (-0.1f, -0.05f, -0.1f);
             glScalef (0.99, 1.0, 0.99);
             glRotatef (90.f, 1.f, 0.f, 0.f);
-            gleScrew (Bezier::BEZIER_PRECISION, contour, NULL, up, 0, -0.1, 0);
+            gleScrew (Bezier::BEZIER_PRECISION + 1, contour, NULL, up, 0, -0.1, 0);
         }
         glPopMatrix ();
     }
@@ -232,8 +232,8 @@ namespace Butterfly {
         drawBody ();
         drawHead ();
         drawTail ();
-        drawWings ();
         drawAntennae ();
+        drawWings ();
     }
 }
 
