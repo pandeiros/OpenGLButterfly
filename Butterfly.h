@@ -132,7 +132,7 @@ namespace Butterfly {
     }
 
     // Wings draw function.
-    // Four wings
+    // Four wings extruded from Bezier curves with white borders.
     void drawWings () {
         float sizeModifier = MAX (10.f, Camera::DISTANCE) / 10.f;
         if (Animation::isAnimOn)
