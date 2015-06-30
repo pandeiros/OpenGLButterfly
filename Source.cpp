@@ -1,9 +1,9 @@
 /**
-Warsaw University of Technology
-Faculty of Electronics and Information Technology
-Author: Paweł Kaczyński
+    Warsaw University of Technology
+    Faculty of Electronics and Information Technology
+    Author: Paweł Kaczyński
 
-OpenGL Project - "Butterfly"
+    OpenGL Project - "Butterfly"
 */
 #include <stdlib.h>
 #include <stdio.h>
@@ -20,38 +20,39 @@ OpenGL Project - "Butterfly"
 #include "Render.h"
 
 // Program main function.
-int main (int argc, char **argv) {
+int main(int argc, char **argv)
+{
     // Print start-up message.
-    Main::printHeader ();
+    Main::printHeader();
 
     // Initialize window.
-    glutInit (&argc, argv);
-    glutInitDisplayMode (MODE);
-    glutInitWindowPosition (Window::POSITION_X, Window::POSITION_Y);
-    glutInitWindowSize (Window::WIDTH, Window::HEIGHT);
-    glutCreateWindow (TITLE);
+    glutInit(&argc, argv);
+    glutInitDisplayMode(MODE);
+    glutInitWindowPosition(Window::POSITION_X, Window::POSITION_Y);
+    glutInitWindowSize(Window::WIDTH, Window::HEIGHT);
+    glutCreateWindow(TITLE);
 
     // Keyboard callbacks.
-    glutKeyboardFunc (Keyboard::handlePressedKey);	    // Pressed key handler.
-    glutKeyboardUpFunc (Keyboard::handleReleasedKey);   // Released key handler.
-    glutSpecialFunc (Keyboard::pressedKeySpecial);		// Pressed special key handler.
-    glutSpecialUpFunc (Keyboard::releasedKeySpecial);	// Released special key handler.
+    glutKeyboardFunc(Keyboard::handlePressedKey);	    // Pressed key handler.
+    glutKeyboardUpFunc(Keyboard::handleReleasedKey);   // Released key handler.
+    glutSpecialFunc(Keyboard::pressedKeySpecial);		// Pressed special key handler.
+    glutSpecialUpFunc(Keyboard::releasedKeySpecial);	// Released special key handler.
 
     // Mouse callbacks.
-    glutMouseFunc (Mouse::mouseButton);		// Press/release button mouse handler.
-    glutMotionFunc (Mouse::mouseMove);		// Mouse draggin handler.
+    glutMouseFunc(Mouse::mouseButton);		// Press/release button mouse handler.
+    glutMotionFunc(Mouse::mouseMove);		// Mouse draggin handler.
 
     // Graphics callbacks.
-    glutReshapeFunc (Render::changeSize);		// Window reshape function.
-    glutDisplayFunc (Render::renderScene);	    // Scene display function.
-    glutIdleFunc (Render::renderScene);         // Scene idle function (which is display function)
+    glutReshapeFunc(Render::changeSize);		// Window reshape function.
+    glutDisplayFunc(Render::renderScene);	    // Scene display function.
+    glutIdleFunc(Render::renderScene);         // Scene idle function (which is display function)
 
     // Ignore key repetition.
-    glutIgnoreKeyRepeat (GLUT_DEVICE_IGNORE_KEY_REPEAT);
+    glutIgnoreKeyRepeat(GLUT_DEVICE_IGNORE_KEY_REPEAT);
 
     // And we begin...
-    Render::init ();
-    glutMainLoop ();
+    Render::init();
+    glutMainLoop();
 
     return 0;
 }

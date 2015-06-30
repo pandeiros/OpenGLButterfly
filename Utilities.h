@@ -4,14 +4,16 @@
 #include <string>
 #include <iomanip>
 #include <iostream>
-#include "GLUT.H" 
+#include "GLUT.H"
+#include "windows.h"
 
 #define PI  3.1415f
 #define MIN(a,b) (((a) < (b)) ? (a) : (b))
 #define MAX(a,b) (((a) > (b)) ? (a) : (b))
 
 // Main variables and functions.
-namespace Main {
+namespace Main
+{
     // Title
     static std::string TITLE = ">>> OpenGL Butterfly Project <<<";
 
@@ -22,34 +24,38 @@ namespace Main {
     static std::string ANIM_INFO = " >> Hit Space to turn animation on/off.\n";
 
     // Prints formatted greeting message.
-    static void printHeader () {
+    static void printHeader()
+    {
         unsigned int lineSize = 70;
-        std::cout << std::setw (lineSize) << std::setfill ('=') << "\n";
+        std::cout << std::setw(lineSize) << std::setfill('=') << "\n";
         std::cout << "               " << TITLE << "\n";
-        std::cout << std::setw (lineSize) << std::setfill ('-') << "\n";
+        std::cout << std::setw(lineSize) << std::setfill('-') << "\n";
         std::cout << AUTHOR_INFO;
-        std::cout << std::setw (lineSize) << std::setfill ('-') << "\n";
+        std::cout << std::setw(lineSize) << std::setfill('-') << "\n";
         std::cout << CAMERA_MOVEMENT;
-        std::cout << std::setw (lineSize) << std::setfill ('-') << "\n";
+        std::cout << std::setw(lineSize) << std::setfill('-') << "\n";
         std::cout << LIGHT_INFO;
-        std::cout << std::setw (lineSize) << std::setfill ('-') << "\n";
+        std::cout << std::setw(lineSize) << std::setfill('-') << "\n";
         std::cout << ANIM_INFO;
-        std::cout << std::setw (lineSize) << std::setfill ('-') << "\n";
+        std::cout << std::setw(lineSize) << std::setfill('-') << "\n";
         std::cout << "\n                           HAVE FUN :D\n\n";
-        std::cout << std::setw (lineSize) << std::setfill ('=') << "\n";
+        std::cout << std::setw(lineSize) << std::setfill('=') << "\n";
     }
 }
 
 // Window parameters.
-namespace Window {
+namespace Window
+{
     // Position.
-    enum Position {
+    enum Position
+    {
         POSITION_X = 300,    // Window x position.
         POSITION_Y = 200    // Window y position.
     };
 
     // Size.
-    enum Size {
+    enum Size
+    {
         WIDTH = 900,    // Window width.
         HEIGHT = 500    // Window height.
     };
@@ -63,8 +69,9 @@ namespace Window {
 }
 
 // Camera position and movement parameters.
-namespace Camera {
-    /// Position.     
+namespace Camera
+{
+    /// Position.
 
     static float POSITION_X = 13.0f;      // Camera x position.
     static float POSITION_Y = 30.0f;     // Camera y position.
@@ -93,7 +100,8 @@ namespace Camera {
 }
 
 // Light position, spot and intensity parameters.
-namespace Light {
+namespace Light
+{
 
     // Border values for linear attenuation.
 
@@ -117,7 +125,8 @@ namespace Light {
 }
 
 // Bezier curve parameters.
-namespace Bezier {
+namespace Bezier
+{
 
 #define CTRL_POINTS 5
 #define MIN_BEZIER_PREC 0
@@ -151,46 +160,51 @@ namespace Bezier {
     };
 
     // Factorial function,
-    int factorial (int n) {
-        return (n == 1 || n == 0) ? 1 : factorial (n - 1) * n;
+    int factorial(int n)
+    {
+        return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
     }
 
     // Bernstein base polynomial function.
-    float fBernstein (unsigned int i, float t) {
-        return (factorial (CTRL_POINTS - 1) * std::pow (t, i) * std::pow (1 - t, CTRL_POINTS - 1 - i) / factorial (i) / factorial (CTRL_POINTS - 1 - i));
+    float fBernstein(unsigned int i, float t)
+    {
+        return (factorial(CTRL_POINTS - 1) * std::pow(t, i) * std::pow(1 - t, CTRL_POINTS - 1 - i) / factorial(i) / factorial(CTRL_POINTS - 1 - i));
     }
 
     // Calculates points for a curve.
-    float getBezierPoint (bool isWing, bool lower, bool right, float t, unsigned int coord) {
+    float getBezierPoint(bool isWing, bool lower, bool right, float t, unsigned int coord)
+    {
         float point = 0.f;
 
-        for (unsigned int i = 0; i < CTRL_POINTS - 1; ++i) {
-            if (isWing) {
+        for (unsigned int i = 0; i < CTRL_POINTS - 1; ++i)
+        {
+            if (isWing)
+            {
                 if (lower && right)
-                    point += lowerCtrlPoints[i][coord] * fBernstein (i, t);
+                    point += lowerCtrlPoints[i][coord] * fBernstein(i, t);
                 else if (!lower && right)
-                    point += upperCtrlPoints[i][coord] * fBernstein (i, t);
+                    point += upperCtrlPoints[i][coord] * fBernstein(i, t);
                 else if (lower && !right)
-                    point += lowerCtrlPoints[i][coord] * (coord == 0 ? -1 : 1) * fBernstein (i, t);
+                    point += lowerCtrlPoints[i][coord] * (coord == 0 ? -1 : 1) * fBernstein(i, t);
                 else
-                    point += upperCtrlPoints[i][coord] * (coord == 0 ? -1 : 1) * fBernstein (i, t);
+                    point += upperCtrlPoints[i][coord] * (coord == 0 ? -1 : 1) * fBernstein(i, t);
             }
-            else {
+            else
+            {
                 if (right)
-                    point += antennaCtrlPoints[i][coord] * fBernstein (i, t);
+                    point += antennaCtrlPoints[i][coord] * fBernstein(i, t);
                 else
-                    point += antennaCtrlPoints[i][coord] * (coord == 0 ? -1 : 1) * fBernstein (i, t);
+                    point += antennaCtrlPoints[i][coord] * (coord == 0 ? -1 : 1) * fBernstein(i, t);
             }
         }
 
         return point;
     }
-
-
 }
 
 // Animation controls.
-namespace Animation {
+namespace Animation
+{
 
     // Static FPS
     static unsigned int FPS = 60;

@@ -5,7 +5,8 @@
 
 #define MOUSE_DRAG_BUTTON GLUT_LEFT_BUTTON
 
-namespace Mouse {
+namespace Mouse
+{
 
     /// Mouse drag controls.
 
@@ -13,7 +14,7 @@ namespace Mouse {
     static int DRAG_Y = -1;     // Y-axis mouse drag control
 
     // Mouse dragging control function.
-    void mouseMove (int x, int y)
+    void mouseMove(int x, int y)
     {
         // If mouse button is down (DRAG_X and DRAG_Y  != -1).
         if (DRAG_X >= 0 && DRAG_Y >= 0)
@@ -23,26 +24,27 @@ namespace Mouse {
             Camera::DELTA_ANGLE_Y = (y - DRAG_Y) * Camera::ROTATION_MODIFIER;
 
             // Change roatation.
-            Camera::DIR_X = sin ((Camera::ANGLE_X + Camera::DELTA_ANGLE_X) / 180 * PI);
-            Camera::DIR_Y = -sin ((Camera::ANGLE_Y + Camera::DELTA_ANGLE_Y) / 540 * PI) * 3;
-            Camera::DIR_Z = -cos ((Camera::ANGLE_X + Camera::DELTA_ANGLE_X) / 180 * PI);
+            Camera::DIR_X = sin((Camera::ANGLE_X + Camera::DELTA_ANGLE_X) / 180 * PI);
+            Camera::DIR_Y = -sin((Camera::ANGLE_Y + Camera::DELTA_ANGLE_Y) / 540 * PI) * 3;
+            Camera::DIR_Z = -cos((Camera::ANGLE_X + Camera::DELTA_ANGLE_X) / 180 * PI);
         }
     }
 
     // Mouse button pressing handler.
-    void mouseButton (int button, int state, int x, int y) {
-        
+    void mouseButton(int button, int state, int x, int y)
+    {
+
         // Camera moving button.
-        if (button == MOUSE_DRAG_BUTTON) 		
+        if (button == MOUSE_DRAG_BUTTON)
         {
             // Press action.
-            if (state == GLUT_DOWN)				
-            {                
+            if (state == GLUT_DOWN)
+            {
                 DRAG_X = x;
                 DRAG_Y = y;
             }
             // Release action.
-            else    // state == GLUT_UP		    			
+            else    // state == GLUT_UP
             {
                 Camera::ANGLE_X += Camera::DELTA_ANGLE_X;
                 Camera::ANGLE_Y += Camera::DELTA_ANGLE_Y;

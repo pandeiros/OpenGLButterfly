@@ -23,17 +23,20 @@
 #define KEY_BEZIER_DOWN GLUT_KEY_PAGE_DOWN
 // --------------------------------------------
 
-namespace Keyboard {
+namespace Keyboard
+{
 
     // Actions binded to key pressed event.
-    void handlePressedKey (unsigned char key, int xx, int yy) {
+    void handlePressedKey(unsigned char key, int xx, int yy)
+    {
         if (key == 'd')
             key = 'D';
 
-        switch (key) {
+        switch (key)
+        {
             // Program termination.
             case KEY_EXIT_DEFAULT:
-                exit (0);
+                exit(0);
                 break;
 
                 // Camera movement bindings.
@@ -61,12 +64,13 @@ namespace Keyboard {
     }
 
     // Actions binded to key release event.
-    void handleReleasedKey (unsigned char key, int xx, int yy)	// pressing this keys causes moving light source, moving tail, quiting program
+    void handleReleasedKey(unsigned char key, int xx, int yy)	// pressing this keys causes moving light source, moving tail, quiting program
     {
         if (key == 'd')
             key = 'D';
 
-        switch (key) {
+        switch (key)
+        {
 
             // Camera stop movement bindings.
             case KEY_MOVE_FORWARD:
@@ -84,10 +88,12 @@ namespace Keyboard {
     }
 
     // Special GLUT pressed key handler.
-    void pressedKeySpecial (int key, int x, int y) {
+    void pressedKeySpecial(int key, int x, int y)
+    {
 
         // Y-axis camera movement.
-        switch (key) {
+        switch (key)
+        {
             case KEY_MOVE_UP:
                 Camera::DELTA_Y = Camera::SPEED;
                 break;
@@ -95,16 +101,16 @@ namespace Keyboard {
                 Camera::DELTA_Y = -Camera::SPEED;
                 break;
             case KEY_LIGHT_UP:
-                Light::LINEAR_ATT = MAX (MIN_LINEAR_ATT, Light::LINEAR_ATT - 0.01f);
+                Light::LINEAR_ATT = MAX(MIN_LINEAR_ATT, Light::LINEAR_ATT - 0.01f);
                 break;
             case KEY_LIGHT_DOWN:
-                Light::LINEAR_ATT = MIN (MAX_LINEAR_ATT, Light::LINEAR_ATT + 0.01f);
+                Light::LINEAR_ATT = MIN(MAX_LINEAR_ATT, Light::LINEAR_ATT + 0.01f);
                 break;
             case KEY_BEZIER_UP:
-                Bezier::BEZIER_PRECISION = MIN (MAX_BEZIER_PREC, Bezier::BEZIER_PRECISION + 2);
+                Bezier::BEZIER_PRECISION = MIN(MAX_BEZIER_PREC, Bezier::BEZIER_PRECISION + 2);
                 break;
             case KEY_BEZIER_DOWN:
-                Bezier::BEZIER_PRECISION = MAX (MIN_BEZIER_PREC, Bezier::BEZIER_PRECISION - 2);
+                Bezier::BEZIER_PRECISION = MAX(MIN_BEZIER_PREC, Bezier::BEZIER_PRECISION - 2);
                 break;
 
             default:
@@ -113,10 +119,12 @@ namespace Keyboard {
     }
 
     // Special GLUT released key handler.
-    void releasedKeySpecial (int key, int x, int y) {
+    void releasedKeySpecial(int key, int x, int y)
+    {
 
         // Stop moving camera in Y-axis
-        switch (key) {
+        switch (key)
+        {
             case KEY_MOVE_UP:
             case KEY_MOVE_DOWN:
                 Camera::DELTA_Y = 0.0f;
